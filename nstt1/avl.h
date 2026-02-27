@@ -19,7 +19,15 @@ class AVLTree {
     Node(const T& value):
         parent(nullptr), left(nullptr), right(nullptr), height(0), value(value) {}
 
-    ~Node(void) {
+    Node(const Node& other, Node* par = nullptr):
+        parent(par),
+        left(other.left ? new Node(*other.left, this) : nullptr),
+        right(other.right ? new Node(*other.right, this) : nullptr),
+        height(other.height),
+        value(other.value) {
+    }
+
+    ~Node() {
       delete left;
       delete right;
     }
@@ -174,6 +182,15 @@ class AVLTree {
 public:
   AVLTree():
       root(nullptr) {}
+
+  AVLTree(const AVLTree<T>& other):
+      root(other.root ? new Node(*other.root) : nullptr) {}
+
+  AVLTree<T>& operator=(const AVLTree<T>& other) {
+    delete root;
+    root = other.root ? new Node(*other.root) : nullptr;
+    return *this;
+  }
 
   ~AVLTree() {
     delete root;

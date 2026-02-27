@@ -11,7 +11,7 @@ TEST(AvlTreeTest, TestMin) {
   for (auto elem : elems) {
     tree.insert(elem);
   }
-  ASSERT_TRUE(tree.min() == *std::min_element(elems.begin(), elems.end()));
+  ASSERT_EQ(tree.min(), *std::min_element(elems.begin(), elems.end()));
 }
 
 TEST(AvlTreeTest, TextMax) {
@@ -19,7 +19,7 @@ TEST(AvlTreeTest, TextMax) {
   for (auto elem : elems) {
     tree.insert(elem);
   }
-  ASSERT_TRUE(tree.max() == *std::max_element(elems.begin(), elems.end()));
+  ASSERT_EQ(tree.max(), *std::max_element(elems.begin(), elems.end()));
 }
 
 TEST(AvlTreeTest, TestRemove) {
@@ -30,7 +30,30 @@ TEST(AvlTreeTest, TestRemove) {
   int min = tree.min();
   ASSERT_TRUE(min == *std::min_element(elems.begin(), elems.end()));
   tree.remove(min);
-  elems.erase(std::find(elems.begin(), elems.end(), 2));
+  std::vector<int> copyElem = elems;
+  copyElem.erase(std::min_element(copyElem.begin(), copyElem.end()));
+  ASSERT_EQ(tree.min(), *std::min_element(copyElem.begin(), copyElem.end()));
+}
+
+TEST(AvlTreeTest, TestCopy) {
+  AVLTree<int> tree;
+  for (auto elem : elems) {
+    tree.insert(elem);
+  }
+  AVLTree<int> newTree = tree;
+  tree.remove(tree.min());
+  ASSERT_EQ(newTree.min(), *std::min_element(elems.begin(), elems.end()));
+}
+
+TEST(AvlTreeTest, TestCopyAssignment) {
+  AVLTree<int> tree;
+  for (auto elem : elems) {
+    tree.insert(elem);
+  }
+  AVLTree<int> newTree;
+  newTree.insert(*std::max_element(elems.begin(), elems.end()) + 1);
+  newTree = tree;
+  ASSERT_EQ(newTree.max(), *std::max_element(elems.begin(), elems.end()));
 }
 
 int main(int argc, char** argv) {

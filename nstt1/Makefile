@@ -6,7 +6,7 @@ endef
 
 CC = clang++
 
-COMPILER_FLAGS = -std=c++20 -O3
+COMPILER_FLAGS = -std=c++20 -O3 -g3
 LIB_FLAGS = -lgtest -lgmock -pthread
 WARNING_FLAGS = -Wall -Wextra -Wpedantic
 SANITIZER_FLAGS = -fsanitize=address
@@ -25,8 +25,6 @@ $(EXE): $(CPP_SOURCES) $(CPP_HEADERS)
 	$(CC) $(CPP_SOURCES) -o $@ $(FLAGS)
 # 	clang++ -std=c++20 -Wall -Wextra -Wpedantic -I./ ./avl_test.cpp -lgtest -lgmock -pthread -o exec
 # 	clang++ -std=c++20 -Wall -Wextra -Wpedantic -lgtest -lgmock -pthread ./avl_test.cpp -o exec
-
-
 
 test: $(EXE)
 	./$(EXE)
