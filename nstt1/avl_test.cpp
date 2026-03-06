@@ -2,6 +2,7 @@
 
 #include "gtest/gtest.h"
 #include <algorithm>
+#include <stdexcept>
 #include <vector>
 
 std::vector<int> elems = {5, 1, 4, 3, 7, 2};
@@ -54,6 +55,37 @@ TEST(AvlTreeTest, TestCopyAssignment) {
   newTree.insert(*std::max_element(elems.begin(), elems.end()) + 1);
   newTree = tree;
   ASSERT_EQ(newTree.max(), *std::max_element(elems.begin(), elems.end()));
+}
+
+TEST(AvlTreeTest, TestMove) {
+  AVLTree<int> tree;
+  for (auto elem : elems) {
+    tree.insert(elem);
+  }
+  AVLTree<int> newTree = AVLTree<int>(std::move(tree));
+  ASSERT_EQ(newTree.min(), *std::min_element(elems.begin(), elems.end()));
+  ASSERT_THROW(tree.min(), std::out_of_range);
+}
+
+TEST(AvlTreeTest, TestMoveAssignment) {
+  AVLTree<int> tree;
+  for (auto elem : elems) {
+    tree.insert(elem);
+  }
+  AVLTree<int> newTree;
+  newTree = std::move(tree);
+  ASSERT_EQ(newTree.min(), *std::min_element(elems.begin(), elems.end()));
+  ASSERT_THROW(tree.min(), std::out_of_range);
+}
+
+TEST(SuggestedTest, TrickyRemove) {
+  AVLTree<int> tree;
+
+  tree.insert(2);
+  tree.insert(1);
+  tree.insert(3);
+
+  tree.remove(2);
 }
 
 int main(int argc, char** argv) {

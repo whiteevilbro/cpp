@@ -122,24 +122,6 @@ class AVLTree {
       return repair();
     }
 
-    Node* replace_with_min(Node* node) {
-      if (left) {
-        left = left->replace_with_min(node);
-        return repair();
-      }
-      if (right) {
-        right->parent = parent;
-      }
-      Node* ret = right;
-      parent    = node->parent;
-      left      = node->left;
-      right     = node->right;
-      height    = node->height;
-
-      node->parent = this;
-      return ret;
-    }
-
     Node* remove(T v) {
       if (v != value) {
         if (v < value) {
@@ -149,23 +131,15 @@ class AVLTree {
           if (right)
             right = right->remove(v);
         }
-        return repair();
       } else {
-        if (!left && !right) {
-          delete this;
-          return nullptr;
-        } else if (left && right) {
-          Node* node    = right->replace_with_min(this);
-          parent->right = node; // MIN node that took our place, not actual parent
-
-          left  = nullptr;
-          right = nullptr;
-          delete this;
-
-          return node->repair();
+        if (left && right) {
+          Node& min = right->min();
+          value     = min.value;
+          right     = right->remove(value);
         } else {
-          Node* tail   = left ? left : right;
-          tail->parent = parent;
+          Node* tail = left ? left : right;
+          if (tail)
+            tail->parent = parent;
 
           left  = nullptr;
           right = nullptr;
@@ -174,6 +148,7 @@ class AVLTree {
           return tail;
         }
       }
+      return repair();
     }
   };
 
@@ -183,12 +158,24 @@ public:
   AVLTree():
       root(nullptr) {}
 
-  AVLTree(const AVLTree<T>& other):
+  AVLTree(const AVLTree<T>& other): //copy ctr
       root(other.root ? new Node(*other.root) : nullptr) {}
 
-  AVLTree<T>& operator=(const AVLTree<T>& other) {
-    delete root;
-    root = other.root ? new Node(*other.root) : nullptr;
+  AVLTree(AVLTree<T>&& other) { // move ctr
+    root       = other.root;
+    other.root = nullptr;
+  }
+
+  AVLTree<T>& operator=(const AVLTree<T>& other) { // copy assignment
+    if (this != &other) {
+      delete root;
+      root = other.root ? new Node(*other.root) : nullptr;
+    }
+    return *this;
+  }
+
+  AVLTree<T>& operator=(AVLTree<T>&& other) { // move assignment
+    std::swap(root, other.root);
     return *this;
   }
 
