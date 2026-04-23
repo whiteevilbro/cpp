@@ -1,0 +1,3 @@
+[submodule "nstt7"]
+	path = nstt7
+	url = https://github.com/whiteevilbro/cpp_VeryReducedInstructionSetComputer.git
