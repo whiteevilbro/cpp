@@ -2,6 +2,7 @@
 
 #include "gtest/gtest.h"
 #include <algorithm>
+#include <cstddef>
 #include <stdexcept>
 #include <vector>
 
@@ -76,6 +77,22 @@ TEST(AvlTreeTest, TestMoveAssignment) {
   newTree = std::move(tree);
   ASSERT_EQ(newTree.min(), *std::min_element(elems.begin(), elems.end()));
   ASSERT_THROW(tree.min(), std::out_of_range);
+}
+
+TEST(AvlTreeTest, TestRangeForLoop) {
+  AVLTree<int> tree;
+  for (auto elem : elems) {
+    tree.insert(elem);
+  }
+
+  std::vector<int> copyElem = elems;
+  std::sort(copyElem.begin(), copyElem.end());
+
+  size_t i = 0;
+  for (auto elem : tree) {
+    ASSERT_EQ(copyElem[i], elem);
+    i++;
+  }
 }
 
 TEST(SuggestedTest, TrickyRemove) {
