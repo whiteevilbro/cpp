@@ -4,6 +4,7 @@
 #include <concepts>
 #include <cstddef>
 #include <exception>
+#include <stdexcept>
 #include <utility>
 #include <vector>
 
@@ -17,6 +18,8 @@ concept is_additive = requires(T a, T b) {
   { a + b } noexcept -> std::same_as<T>;
   { a += b } noexcept;
 };
+
+class invalid_dimensions_error: public std::exception {};
 
 template<typename T>
   requires is_additive<T> && is_multiplicable<T> && std::default_initializable<T>
@@ -58,13 +61,9 @@ public:
   }
 
   Matrix<T>& operator=(const Matrix<T>& other) {
-    delete values;
-    this->n = other.n;
-    for (size_t i = 0; i < n; i++) {
-      for (size_t j = 0; j < n; j++) {
-        (*this)[i][j] = other[i][j];
-      }
-    }
+    Matrix<T> copy(other);
+    std::swap(*this, copy);
+    return *this;
   }
 
   Matrix<T>& operator=(Matrix<T>&& other) {
@@ -78,7 +77,7 @@ public:
 
   Matrix<T> operator+(const Matrix<T>& other) const {
     if (n != other.n)
-      throw std::exception();
+      throw invalid_dimensions_error();
 
     Matrix result = Matrix<T>(n);
     for (size_t i = 0; i < n; i++) {
@@ -173,18 +172,23 @@ public:
 
   class MatrixView {
     T* values;
+    size_t n;
     friend Matrix<T>;
 
-    MatrixView(T* v):
-        values(v) {}
+    MatrixView(T* v, size_t s):
+        values(v), n(s) {}
 
   public:
     T& operator[](std::size_t i) const {
+      if (i >= n)
+        throw std::out_of_range("Matrix index out of bounds");
       return values[i];
     }
   };
 
   const MatrixView operator[](std::size_t i) const {
+    if (i >= n)
+      throw std::out_of_range("Matrix index out of bounds");
     return MatrixView(&values[i * n]);
   }
 };
