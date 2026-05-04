@@ -17,8 +17,8 @@
 
 template<typename Checker, typename... Args>
 int getIndexOfFirstMatch(Checker check, Args... args) {
-  auto l = [n = -1, i = 0, &check](auto x) mutable { return n >= 0 ? n : (check(x) ? n = i : i++, -1); };
-  return (l(args), ...);
+  auto l = [n = -1, i = 0, &check](auto&& x) mutable { return n >= 0 ? n : (check(x) ? n = i : i++, -1); };
+  return (l(std::forward<Args>(args)), ...);
 }
 
 TEST(CheckTest, CorrectnessTest) {
