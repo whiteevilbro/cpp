@@ -9,6 +9,7 @@
 template<std::size_t buffer_size = 32>
 struct FileBufferedWriter: virtual FileWriter,
                            virtual BufferedWriter<buffer_size> {
+  FileBufferedWriter(const std::string&);
   FileBufferedWriter(FILE*);
 
   ~FileBufferedWriter() {
@@ -23,6 +24,10 @@ protected:
 
   int putCharSrc(char) override;
 };
+
+template<std::size_t buffer_size>
+inline FileBufferedWriter<buffer_size>::FileBufferedWriter(const std::string& path):
+    FileWriter(path) {}
 
 template<std::size_t buffer_size>
 inline FileBufferedWriter<buffer_size>::FileBufferedWriter(FILE* src):

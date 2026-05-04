@@ -12,7 +12,7 @@ WARNING_FLAGS = -Wall -Wextra -Wpedantic
 SANITIZER_FLAGS = -fsanitize=address
 
 CPP_SOURCES = $(shell find -L ./$(SOURCE_DIR) -iname "*.cpp")
-CPP_HEADERS = $(shell find -L ./$(SOURCE_DIR) -iname "*.h")
+CPP_HEADERS = $(shell find -L ./$(SOURCE_DIR) -iname "*.hpp")
 HEADER_FLAGS += $(addprefix -I, $(call uniq,$(dir $(CPP_HEADERS))))
 
 FLAGS = $(HEADER_FLAGS) $(COMPILER_FLAGS) $(WARNING_FLAGS) $(SANITIZER_FLAGS) $(LIB_FLAGS)

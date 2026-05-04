@@ -9,6 +9,7 @@
 
 struct FileReader: virtual FileIO,
                    virtual Reader {
+  FileReader(const std::string&);
   FileReader(FILE*);
 
 protected:
@@ -16,6 +17,9 @@ protected:
   int peekChar() override;
   void shift() override;
 };
+
+inline FileReader::FileReader(const std::string& path):
+    FileReader(fopen(path.c_str(), "r")) {}
 
 inline FileReader::FileReader(FILE* src):
     FileIO(src) {}

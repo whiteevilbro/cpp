@@ -8,12 +8,16 @@
 
 struct FileWriter: virtual FileIO,
                    virtual Writer {
+  FileWriter(const std::string&);
   FileWriter(FILE*);
 
 protected:
   FileWriter(){};
   int putChar(char) override;
 };
+
+inline FileWriter::FileWriter(const std::string& path):
+    FileWriter(fopen(path.c_str(), "w")) {}
 
 inline FileWriter::FileWriter(FILE* src):
     FileIO(src) {}

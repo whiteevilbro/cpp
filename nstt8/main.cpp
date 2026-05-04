@@ -21,6 +21,7 @@ TEST(FIOTest, TestReader) {
 
   for (int i = 0; i < 2; i++) {
     f = fopen("write.txt", "ra");
+    // std::string path = "write.txt";
 
     FileBufferedReaderWriter<>* ob = new FileBufferedReaderWriter(f);
 

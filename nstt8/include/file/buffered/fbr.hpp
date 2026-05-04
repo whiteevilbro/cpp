@@ -9,6 +9,7 @@
 template<std::size_t buffer_size = 32>
 struct FileBufferedReader: virtual FileReader,
                            virtual BufferedReader<buffer_size> {
+  FileBufferedReader(const std::string&);
   FileBufferedReader(FILE*);
 
   virtual void shift() override;
@@ -22,6 +23,10 @@ protected:
   virtual int peekCharSrc() override;
   virtual void shiftSrc() override;
 };
+
+template<std::size_t buffer_size>
+inline FileBufferedReader<buffer_size>::FileBufferedReader(const std::string& path):
+    FileReader(path), BufferedIO<buffer_size>() {}
 
 template<std::size_t buffer_size>
 inline FileBufferedReader<buffer_size>::FileBufferedReader(FILE* src):

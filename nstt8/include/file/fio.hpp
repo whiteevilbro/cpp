@@ -4,8 +4,11 @@
 #include "../io.hpp"
 
 #include <cstdio>
+#include <string>
 
 struct FileIO: virtual IO {
+  FileIO(const std::string&) = delete;
+
   FileIO(FILE* src):
       src(src){};
 
