@@ -4,6 +4,7 @@
 
 #include <format>
 #include <limits>
+#include <optional>
 #include <ostream>
 
 Line::Line(const Point& p1, const Point& p2):
@@ -12,9 +13,21 @@ Line::Line(const Point& p1, const Point& p2):
 Line::Line(double a, double b, double c):
     a_(a), b_(b), c_(c) {}
 
+std::optional<Line> Line::getLine(const Point& p1, const Point& p2) {
+  if (p1 == p2)
+    return {};
+  return Line(p1, p2);
+}
+
+std::optional<Line> Line::getLine(double a, double b, double c) {
+  if (std::abs(a) + std::abs(b) + std::abs(c) < eps)
+    return {};
+  return Line(a, b, c);
+}
+
 Point Line::operator&(const Line& line) const {
   double denom = line.a_ * b_ - a_ * line.b_;
-  if (denom < eps) {
+  if (std::abs(denom) < eps) {
     return Point(std::numeric_limits<double>::infinity(), std::numeric_limits<double>::infinity());
   }
   return Point((line.b_ * c_ - b_ * line.c_) / denom, (a_ * line.c_ - line.a_ * c_) / denom);
