@@ -15,10 +15,17 @@
 //   return (l(args), ...);
 // }
 
+// template<typename Checker, typename... Args>
+// int getIndexOfFirstMatch(Checker check, Args... args) {
+//   auto l = [n = -1, i = 0, &check](auto&& x) mutable { return n >= 0 ? n : (check(x) ? n = i : i++, -1); };
+//   return (l(std::forward<Args>(args)), ...);
+// }
+
 template<typename Checker, typename... Args>
 int getIndexOfFirstMatch(Checker check, Args... args) {
-  auto l = [n = -1, i = 0, &check](auto&& x) mutable { return n >= 0 ? n : (check(x) ? n = i : i++, -1); };
-  return (l(std::forward<Args>(args)), ...);
+  int n  = -1;
+  auto l = [&n, &check](auto&& x) { return n++, !check(x); };
+  return (l(std::forward<Args>(args)) && ...) ? -1 : n;
 }
 
 TEST(CheckTest, CorrectnessTest) {
