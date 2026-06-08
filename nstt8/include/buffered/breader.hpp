@@ -9,6 +9,8 @@
 template<std::size_t buffer_size>
 struct BufferedReader: virtual BufferedIO<buffer_size>,
                        virtual Reader {
+  BufferedReader();
+
 protected:
   virtual void shift() override;
   virtual int peekChar() override;
@@ -18,6 +20,10 @@ protected:
 
   virtual int fillBuffer();
 };
+
+template<std::size_t buffer_size>
+BufferedReader<buffer_size>::BufferedReader():
+    BufferedIO<buffer_size>(), Reader() { std::cerr << "br\n"; }
 
 template<std::size_t buffer_size>
 int BufferedReader<buffer_size>::peekChar() {

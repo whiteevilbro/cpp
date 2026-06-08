@@ -18,7 +18,7 @@ struct FileBufferedReader: virtual FileReader,
   // ~FileBufferedReader() { close(); }
 
 protected:
-  FileBufferedReader(){};
+  // FileBufferedReader(){};
 
   virtual int peekCharSrc() override;
   virtual void shiftSrc() override;
@@ -30,7 +30,7 @@ inline FileBufferedReader<buffer_size>::FileBufferedReader(const std::string& pa
 
 template<std::size_t buffer_size>
 inline FileBufferedReader<buffer_size>::FileBufferedReader(FILE* src):
-    FileIO(src), BufferedIO<buffer_size>() {}
+    FileIO(src), FileReader(src), BufferedReader<buffer_size>() { std::cerr << "fbr\n"; }
 
 template<std::size_t buffer_size>
 inline int FileBufferedReader<buffer_size>::peekChar() {

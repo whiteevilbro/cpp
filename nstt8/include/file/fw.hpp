@@ -12,15 +12,15 @@ struct FileWriter: virtual FileIO,
   FileWriter(FILE*);
 
 protected:
-  FileWriter(){};
+  // FileWriter(){};
   int putChar(char) override;
 };
 
 inline FileWriter::FileWriter(const std::string& path):
-    FileWriter(fopen(path.c_str(), "w")) {}
+    FileWriter(nullptr) { src = fopen(path.c_str(), "w"); }
 
 inline FileWriter::FileWriter(FILE* src):
-    FileIO(src) {}
+    FileIO(src) { std::cerr << "fw\n"; }
 
 inline int FileWriter::putChar(char c) {
   return fputc(c, this->src);

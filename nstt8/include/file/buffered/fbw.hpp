@@ -20,7 +20,7 @@ struct FileBufferedWriter: virtual FileWriter,
   int putChar(char) override;
 
 protected:
-  FileBufferedWriter(){};
+  // FileBufferedWriter(){};
 
   int putCharSrc(char) override;
 };
@@ -31,7 +31,7 @@ inline FileBufferedWriter<buffer_size>::FileBufferedWriter(const std::string& pa
 
 template<std::size_t buffer_size>
 inline FileBufferedWriter<buffer_size>::FileBufferedWriter(FILE* src):
-    FileIO(src) {}
+    FileIO(src), FileWriter(src), BufferedWriter<buffer_size>() { std::cerr << "fbw\n"; }
 
 template<std::size_t buffer_size>
 inline int FileBufferedWriter<buffer_size>::putChar(char c) {

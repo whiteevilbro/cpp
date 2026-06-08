@@ -9,6 +9,7 @@
 template<std::size_t buffer_size>
 struct BufferedWriter: virtual BufferedIO<buffer_size>,
                        virtual Writer {
+  BufferedWriter();
   virtual void close() override;
 
 protected:
@@ -17,6 +18,10 @@ protected:
 
   virtual int flushBuffer();
 };
+
+template<std::size_t buffer_size>
+BufferedWriter<buffer_size>::BufferedWriter():
+    BufferedIO<buffer_size>(), Writer() { std::cerr << "bw\n"; }
 
 template<std::size_t buffer_size>
 int BufferedWriter<buffer_size>::putChar(char c) {

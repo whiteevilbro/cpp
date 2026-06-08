@@ -4,18 +4,20 @@
 #include "../io.hpp"
 
 #include <cstdio>
+#include <iostream>
 #include <string>
 
 struct FileIO: virtual IO {
   FileIO(const std::string&) = delete;
 
   FileIO(FILE* src):
-      src(src){};
+      src(src) { std::cerr << "fio\n"; };
 
   virtual ~FileIO() override;
 
 protected:
-  FileIO(){};
+  // FileIO() { std::cerr << "default fio\n"; };
+
   FILE* src;
 };
 

@@ -7,20 +7,20 @@
 #include "fbw.hpp"
 
 template<std::size_t buffer_size = 32>
-struct FileBufferedReaderWriter: virtual FileBufferedWriter<buffer_size>,
+struct FileBufferedReaderWriter: virtual FileReaderWriter,
+                                 virtual FileBufferedWriter<buffer_size>,
                                  virtual FileBufferedReader<buffer_size>,
-                                 virtual BufferedReaderWriter<buffer_size>,
-                                 virtual FileReaderWriter {
+                                 virtual BufferedReaderWriter<buffer_size> {
   FileBufferedReaderWriter(FILE* src);
   FileBufferedReaderWriter(const std::string&, bool = false);
 };
 
 template<std::size_t buffer_size>
 inline FileBufferedReaderWriter<buffer_size>::FileBufferedReaderWriter(const std::string& path, bool destroy):
-    FileReaderWriter(path, destroy), BufferedIO<buffer_size>() {}
+    FileIO(nullptr), FileReader(nullptr), FileWriter(nullptr), FileReaderWriter(path, destroy), FileBufferedWriter<buffer_size>(src), FileBufferedReader<buffer_size>(src), BufferedReaderWriter<buffer_size>() {}
 
 template<std::size_t buffer_size>
 inline FileBufferedReaderWriter<buffer_size>::FileBufferedReaderWriter(FILE* src):
-    FileIO(src), BufferedIO<buffer_size>() {}
+    FileIO(src), FileReader(src), FileWriter(src), FileReaderWriter(src), FileBufferedWriter<buffer_size>(src), FileBufferedReader<buffer_size>(src), BufferedReaderWriter<buffer_size>() { std::cerr << "fbrw\n"; }
 
 #endif

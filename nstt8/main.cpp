@@ -16,14 +16,14 @@
 #include <iostream> // IWYU pragma: keep
 
 TEST(FIOTest, TestReader) {
-  FILE* f;
+  // FILE* f;
   std::string str;
 
   for (int i = 0; i < 2; i++) {
-    f = fopen("write.txt", "ra");
-    // std::string path = "write.txt";
+    // f = fopen("write.txt", "ra");
+    std::string path = "write.txt";
 
-    FileBufferedReaderWriter<>* ob = new FileBufferedReaderWriter(f);
+    FileBufferedReaderWriter<>* ob = new FileBufferedReaderWriter(path, false);
 
     ob->read(str);
     ASSERT_EQ(str, "barfoofoo");
@@ -51,7 +51,50 @@ TEST(SIOTest, TestWriter) {
   ASSERT_EQ(str, str_s);
 }
 
+// struct A {
+//   int a;
+
+//   A():
+//       a(42) { std::cout << "pum" << '\n'; }
+// };
+
+// struct B: virtual A {
+//   B():
+//       A() {}
+// };
+
+// struct C: virtual A {
+//   C():
+//       A() {}
+// };
+
+// struct D: virtual B,
+//           virtual C {
+//   D():
+//       B(), C() {}
+// };
+
 int main(int argc, char** argv) {
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
+
+  // D c = D();
+  // std::cout << c.a << '\n';
+
+  // FILE* f;
+  // std::string str;
+
+  // for (int i = 0; i < 2; i++) {
+  //   f                = fopen("write.txt", "ra");
+  //   std::string path = "write.txt";
+
+  //   // FileBufferedReaderWriter<>* ob = new FileBufferedReaderWriter(f);
+  //   auto* ob = new FileBufferedReaderWriter(path, false);
+
+  //   ob->read(str);
+  //   std::cout << str << '\n';
+  //   // ASSERT_EQ(str, "barfoofoo");
+
+  //   delete ob;
+  // }
 }

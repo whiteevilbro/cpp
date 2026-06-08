@@ -13,16 +13,17 @@ struct FileReader: virtual FileIO,
   FileReader(FILE*);
 
 protected:
-  FileReader(){};
+  // FileReader():
+  //     FileIO(nullptr){};
   int peekChar() override;
   void shift() override;
 };
 
 inline FileReader::FileReader(const std::string& path):
-    FileReader(fopen(path.c_str(), "r")) {}
+    FileReader(nullptr) { src = fopen(path.c_str(), "r"); }
 
 inline FileReader::FileReader(FILE* src):
-    FileIO(src) {}
+    FileIO(src) { std::cerr << "fr\n"; }
 
 inline int FileReader::peekChar() {
   int c = getc(this->src);

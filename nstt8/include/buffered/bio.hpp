@@ -4,6 +4,7 @@
 #include "../io.hpp"
 
 #include <cstddef>
+#include <iostream>
 
 template<std::size_t buffer_size>
 struct BufferedIO: virtual IO {
@@ -22,6 +23,7 @@ template<std::size_t buffer_size>
 BufferedIO<buffer_size>::BufferedIO():
     pos(0) {
   buffer = new char[buffer_size]();
+  std::cerr << "bio\n";
 }
 
 template<std::size_t buffer_size>
