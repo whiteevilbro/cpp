@@ -4,6 +4,7 @@
 #include <concepts>
 #include <cstddef>
 #include <cstdint>
+#include <iterator>
 #include <stdexcept>
 #include <utility>
 
@@ -150,11 +151,90 @@ class AVLTree {
       }
       return repair();
     }
+
+    const Node* successor() const {
+      if (right)
+        return &right->min();
+      const Node* cur = this;
+      const Node* par = parent;
+      while (par != nullptr && par->left != cur) {
+        cur = par;
+        par = cur->parent;
+      }
+      return par;
+    }
+
+    const Node* predecessor() const {
+      if (left)
+        return &left->max();
+      const Node* cur = this;
+      const Node* par = parent;
+      while (par != nullptr && par->right != cur) {
+        cur = par;
+        par = cur->parent;
+      }
+      return par;
+    }
   };
 
   Node* root;
 
+  class Iterator {
+    friend class AVLTree<T>;
+
+    enum Direction {
+      Up,
+      Down
+    } direction;
+
+    const Node* current;
+
+    Iterator(const Node* start):
+        direction(Direction::Up), current(start){};
+
+  public:
+    const T& operator*() const {
+      return current->value;
+    }
+
+    const T* operator->() const {
+      return &current->value;
+    }
+
+    Iterator& operator++() {
+      current = current->successor();
+      return *this;
+    }
+
+    Iterator& operator--() {
+      current = current->predecessor();
+      return *this;
+    }
+
+    auto operator<=>(const Iterator& other) {
+      if (current == nullptr) {
+        if (other.current == nullptr)
+          return 0;
+        return 1;
+      }
+      if (other.current == nullptr)
+        return -1;
+
+      return current->value <=> other.current->value;
+    }
+
+    bool operator==(const Iterator& other) const {
+      return current == other.current;
+    }
+
+    bool operator!=(const Iterator& other) const {
+      return current != other.current;
+    }
+  };
+
 public:
+  using iterator = Iterator;
+
   AVLTree():
       root(nullptr) {}
 
@@ -209,10 +289,15 @@ public:
     throw std::out_of_range("Tree is empty");
   }
 
-  // T predecessor(const T&) const;
-  // T successor(const T&) const;
   // std::size_t rank(const T&) const;
-  //todo iterators
+
+  iterator begin() const {
+    return iterator(&root->min());
+  }
+
+  const iterator end() const {
+    return iterator(nullptr);
+  }
 };
 
 #endif
